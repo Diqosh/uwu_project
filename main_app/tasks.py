@@ -8,5 +8,4 @@ def send_notification_async(notification_id):
         notification = Notification.objects.get(pk=notification_id)
         notification.send()
     except Notification.DoesNotExist:
-        # Handle the case where the notification with the given ID doesn't exist
-        pass
+      raise ValueError(f"Error: Notification with id '{notification_id}' does not exist")

@@ -61,7 +61,7 @@ class NotificationTemplate(models.Model):
 
   # Most probably you will have a static map of all available objects for each kind.
   available_objects = {
-      KIND.ON_BUS_STOP: {"ride":  {"pickup_bus_stop": {"name": "str", "arrival_time": "datetime.time"}, "date": "datetime.date"}},
+      KIND.ON_BUS_STOP: {"ride":  {"pickup_bus_stop": "data"}},
       KIND.ON_SUBSCRIPTION_COMPLETION: {"subscription": 'some data'},
   }
 

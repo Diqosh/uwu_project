@@ -1,0 +1,10 @@
+{% extends 'main_app/base.html' %} {% block content %}
+<h2>Create</h2>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }} {% if is_success %}
+  <p>Success</p>
+  {% endif %}
+
+  <button type="submit">Create</button>
+</form>
+{% endblock %}

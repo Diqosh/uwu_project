@@ -18,15 +18,14 @@ from .tasks import send_notification_async
 
 def send_notifications_async(modeladmin, request, queryset):
     for notification in queryset:
-      print(notification.id)
-      send_notification_async.apply_async(notification.id)
+        send_notification_async.apply_async(kwargs={'notification_id': notification.id})
 
 send_notifications_async.short_description = "Send selected notifications asynchronously"
 
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
-    actions = [send_notifications, send_notification_async]
+    actions = [send_notifications_async, send_notifications]
 
 @admin.register(NotificationTemplate)
 class NotificationTemplateAdmin(admin.ModelAdmin):
