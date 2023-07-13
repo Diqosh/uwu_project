@@ -141,7 +141,7 @@ LOCALE_PATHS = [
 # settings.py
 
 # RabbitMQ Broker Settings
-BROKER_URL = 'amqp://localhost'  # Replace 'localhost' with the RabbitMQ server's hostname or IP address if necessary
+BROKER_URL = 'amqp://guest:guest@broker:5672//'  # Replace 'localhost' with the RabbitMQ server's hostname or IP address if necessary
 CELERY_RESULT_BACKEND = 'django-db'  # Use Django database as the result backend
 
 # Celery Settings
@@ -152,21 +152,3 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'celery': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/home/dimashka/Documents/UwU/uwu_project/celery.log',  # Specify the path and filename of the log file
-        },
-    },
-    'loggers': {
-        'celery': {
-            'handlers': ['celery'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}

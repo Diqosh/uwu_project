@@ -54,39 +54,41 @@ class Notification(models.Model):
     return f"{self.user} - {self.title}"
 
 class NotificationTemplate(models.Model):
-  class KIND(models.TextChoices):
-    ON_BUS_STOP = "on_bus_stop", "On Bus Stop"
-    ON_SUBSCRIPTION_COMPLETION = "on_subscription_completion", "On Subscription Completion"
-    GENERIC = "generic", "Generic"  
+    class KIND(models.TextChoices):
+        ON_BUS_STOP = "on_bus_stop", "On Bus Stop"
+        ON_SUBSCRIPTION_COMPLETION = "on_subscription_completion", "On Subscription Completion"
+        GENERIC = "generic", "Generic"
 
-  # Most probably you will have a static map of all available objects for each kind.
-  available_objects = {
-      KIND.ON_BUS_STOP: {"ride":  {"pickup_bus_stop": "data"}},
-      KIND.ON_SUBSCRIPTION_COMPLETION: {"subscription": 'some data'},
-  }
+    available_objects = {
+        KIND.ON_BUS_STOP: {},
+        KIND.ON_SUBSCRIPTION_COMPLETION: {},
+        KIND.GENERIC: {},
+    }
 
-  kind = models.CharField(
-      _("Kind"),
-      max_length=64,
-      choices=KIND.choices,
-      default=KIND.GENERIC,
-  )
-  title = models.TextField("Title")
-  body = models.TextField("Text")
+    kind = models.CharField(
+        _("Kind"),
+        max_length=64,
+        choices=KIND.choices,
+        default=KIND.GENERIC,
+    )
+    title = models.TextField("Title")
+    body = models.TextField("Text")
 
-  def send(self, user, **kwargs):
+    def send(self, user, **kwargs):
         if self.kind in self.available_objects:
             required_objects = self.available_objects[self.kind].keys()
             missing_objects = set(required_objects) - set(kwargs.keys())
             if missing_objects:
                 raise ValueError(f"Missing required objects for kind '{self.kind}': {', '.join(missing_objects)}")
         else:
-            raise ValueError(f"Invalid kind: '{self.kind}'")
+            # Handle the case when the kind is not in the available_objects dictionary
+            return
+
 
         title = self.title
         body = self.body
 
         Notification.objects.create(user=user, title=title, body=body)
-  
-  def __str__(self):
-    return f"{self.kind} - {self.title}"
+
+    def __str__(self):
+        return f"{self.get_kind_display()} - {self.title}"

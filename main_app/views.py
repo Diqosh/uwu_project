@@ -8,7 +8,13 @@ def create_view(request):
     if request.method == 'POST':
         form = NotificationTemplateForm(request.POST)
         if form.is_valid():
-            form.save()  # Save the form data to create a new NotificationTemplate instance
+            kind = form.cleaned_data['kind']
+            title = form.cleaned_data['title']
+            body = form.cleaned_data['body']
+            
+            template = NotificationTemplate.objects.create(kind=kind, title=title, body=body)
+            
+            template.send(user=request.user)
             is_success = True
     else:
         form = NotificationTemplateForm()
